@@ -1,0 +1,18 @@
+name: 'Assign to project'
+description: 'Assign an issue or PR to a specifcic project based on its labels.'
+inputs:
+  token:
+    description: 'The GitHub authentication token.'
+    required: false
+    default: ${{ github.token }}
+  projects:
+    description: 'Mapping of label to project id.'
+    required: true
+
+runs:
+  using: 'node12'
+  main: 'dist/index.js'
+
+branding:
+  icon: 'columns'
+  color: 'gray-dark'
