@@ -302,6 +302,8 @@ async function assignToProject(token, issueId, projectId) {
 
 async function run() {
   try {
+    console.log(JSON.stringify(github.context.payload, null, 2));
+    console.log(JSON.stringify(github.event, null, 2));
     const issueId = github.context.payload.issue.node_id;
     const label = github.context.payload.label.name;
 
@@ -316,7 +318,7 @@ async function run() {
       const projectId = parseInt(match.split("=")[1]);
       await assignToProject(token, issueId, projectId);
     } else {
-      console.log("No matching project found for label ${label}.");
+      console.log(`No matching project found for label ${label}.`);
     }
   } catch (error) {
     console.error(error);
