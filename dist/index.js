@@ -282,6 +282,25 @@ const core = __webpack_require__(470);
 const github = __webpack_require__(469);
 const { graphql } = __webpack_require__(898);
 
+async function getProjectId(token, org, projectNumber) {
+  const { data } = graphql(`
+    query($org: String!, $number: Int!) {
+      organization(login: $org) {
+        projectNext(number: $number) {
+          id
+        }
+      }
+    }`,
+  {
+    org: org,
+    number: projectNumber,
+    headers: {
+      authorization: `token ${token}`,
+    }
+  });
+  return data.organization.projectNext.id;
+}
+
 async function assignToProject(token, issueId, projectId) {
   await graphql(`
     mutation($project:ID!, $issue:ID!) {
@@ -313,8 +332,10 @@ async function run() {
     });
 
     if (match) {
-      const projectId = parseInt(match.split("=")[1]);
-      console.log(`Assigning issue to project: ${projectId}`);
+      const projectNumber = parseInt(match.split("=")[1]);
+      const owner = github.context.payload.repository.owner.login;
+      const projectId = await getProjectId(token, owner, projectNumber);
+      console.log(`Assigning issue ${issueId} to project: ${projectId} (${owner}#${projectNumber})`);
       await assignToProject(token, issueId, projectId);
     } else {
       console.log(`No matching project found for label ${label}.`);
