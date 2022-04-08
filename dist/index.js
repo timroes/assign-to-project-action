@@ -293,7 +293,7 @@ async function assignToProject(token, issueId, projectId) {
     }
   `, {
     project: projectId,
-    issue, issueId,
+    issue: issueId,
     headers: {
       authorization: `token ${token}`,
     }
@@ -302,10 +302,7 @@ async function assignToProject(token, issueId, projectId) {
 
 async function run() {
   try {
-    console.log(JSON.stringify(github.context.payload, null, 2));
-    console.log(JSON.stringify(github.event, null, 2));
     const issueId = github.context.payload.issue.node_id;
-    console.log(`IssueId: ${issueId}`);
     const label = github.context.payload.label.name;
 
     const token = core.getInput('token');
