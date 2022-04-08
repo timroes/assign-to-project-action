@@ -298,8 +298,7 @@ async function getProjectId(token, org, projectNumber) {
       authorization: `token ${token}`,
     }
   });
-  console.log(result);
-  return result.data.organization.projectNext.id;
+  return result.organization.projectNext.id;
 }
 
 async function assignToProject(token, issueId, projectId) {
@@ -324,7 +323,7 @@ async function run() {
   try {
     const issueId = github.context.payload.issue.node_id;
     const label = github.context.payload.label.name;
-    const owner = core.getInput('owner') || github.context.payload.repository.owner.login;
+    const org = core.getInput('owner') || github.context.payload.repository.owner.login;
 
     const token = core.getInput('token');
 
@@ -335,8 +334,9 @@ async function run() {
 
     if (match) {
       const projectNumber = parseInt(match.split("=")[1]);
-      const projectId = await getProjectId(token, owner, projectNumber);
-      console.log(`Assigning issue ${issueId} to project: ${projectId} (${owner}#${projectNumber})`);
+      console.log(`Finding project id for project #${projectNumber} in org ${org}`);
+      const projectId = await getProjectId(token, org, projectNumber);
+      console.log(`Assigning issue ${issueId} to project: ${projectId} (${org}#${projectNumber})`);
       await assignToProject(token, issueId, projectId);
     } else {
       console.log(`No matching project found for label ${label}.`);
