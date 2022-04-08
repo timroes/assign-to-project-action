@@ -336,7 +336,7 @@ async function run() {
       const projectNumber = parseInt(match.split("=")[1]);
       console.log(`Finding project id for project #${projectNumber} in org ${org}`);
       const projectId = await getProjectId(token, org, projectNumber);
-      console.log(`Assigning issue ${issueId} to project: ${projectId} (${org}#${projectNumber})`);
+      console.log(`Assigning issue ${issueId} to project: ${projectId}`);
       await assignToProject(token, issueId, projectId);
     } else {
       console.log(`No matching project found for label ${label}.`);
