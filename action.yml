@@ -5,6 +5,9 @@ inputs:
     description: 'The GitHub authentication token.'
     required: false
     default: ${{ github.token }}
+  owner:
+    description: 'Owner of the project boards.'
+    required: false
   projects:
     description: 'Mapping of label to project id.'
     required: true

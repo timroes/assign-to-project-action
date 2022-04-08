@@ -323,6 +323,7 @@ async function run() {
   try {
     const issueId = github.context.payload.issue.node_id;
     const label = github.context.payload.label.name;
+    const owner = core.getInput('owner') ||github.context.payload.repository.owner.login;
 
     const token = core.getInput('token');
 
@@ -333,7 +334,6 @@ async function run() {
 
     if (match) {
       const projectNumber = parseInt(match.split("=")[1]);
-      const owner = github.context.payload.repository.owner.login;
       const projectId = await getProjectId(token, owner, projectNumber);
       console.log(`Assigning issue ${issueId} to project: ${projectId} (${owner}#${projectNumber})`);
       await assignToProject(token, issueId, projectId);
