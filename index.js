@@ -3,7 +3,7 @@ const github = require('@actions/github');
 const { graphql } = require('@octokit/graphql');
 
 async function getProjectId(token, org, projectNumber) {
-  const { data } = await graphql(`
+  const result = await graphql(`
     query($org: String!, $number: Int!) {
       organization(login: $org) {
         projectNext(number: $number) {
@@ -18,7 +18,8 @@ async function getProjectId(token, org, projectNumber) {
       authorization: `token ${token}`,
     }
   });
-  return data.organization.projectNext.id;
+  console.log(result);
+  return result.data.organization.projectNext.id;
 }
 
 async function assignToProject(token, issueId, projectId) {
@@ -43,7 +44,7 @@ async function run() {
   try {
     const issueId = github.context.payload.issue.node_id;
     const label = github.context.payload.label.name;
-    const owner = core.getInput('owner') ||github.context.payload.repository.owner.login;
+    const owner = core.getInput('owner') || github.context.payload.repository.owner.login;
 
     const token = core.getInput('token');
 
