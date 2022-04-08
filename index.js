@@ -3,7 +3,7 @@ const github = require('@actions/github');
 const { graphql } = require('@octokit/graphql');
 
 async function getProjectId(token, org, projectNumber) {
-  const { data } = graphql(`
+  const { data } = await graphql(`
     query($org: String!, $number: Int!) {
       organization(login: $org) {
         projectNext(number: $number) {
